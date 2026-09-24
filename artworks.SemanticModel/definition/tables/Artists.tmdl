@@ -1,0 +1,140 @@
+table Artists
+	lineageTag: e272d1c1-4a7b-4115-98aa-5f98b44626d4
+
+	/// Number of distinct artists (rows) in the current filter context.
+	measure '# Artists' = COUNTROWS('Artists')
+		formatString: #,##0
+		displayFolder: Counts
+		lineageTag: 41e25ab6-5fd3-4d3d-9b03-3ad439373323
+
+	/// Number of artists recorded as still living (no death year on file).
+	measure '# Living Artists' = CALCULATE([# Artists], 'Artists'[Living Status] = "Living")
+		formatString: #,##0
+		displayFolder: Counts
+		lineageTag: 348e40ab-3038-48f3-9284-9b056e11b01a
+
+	column ConstituentID
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 38cea964-80ea-430b-91eb-51e9b9e4b539
+		summarizeBy: count
+		sourceColumn: ConstituentID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DisplayName
+		dataType: string
+		lineageTag: 500c369d-280b-47d2-b501-7ab8114e3b61
+		summarizeBy: none
+		sourceColumn: DisplayName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ArtistBio
+		dataType: string
+		isHidden
+		lineageTag: 8eceff01-98da-4966-8260-69675abe08b8
+		summarizeBy: none
+		sourceColumn: ArtistBio
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nationality
+		dataType: string
+		lineageTag: 9ff02a08-818e-42d7-99ba-fa6f499ff281
+		summarizeBy: none
+		sourceColumn: Nationality
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: cd58fd36-bcbd-486d-9ba3-f70c9218f64b
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column BeginDate
+		dataType: int64
+		formatString: 0
+		lineageTag: 52547675-7f3a-4249-a349-eb52be9e8799
+		summarizeBy: none
+		sourceColumn: BeginDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column EndDate
+		dataType: int64
+		formatString: 0
+		lineageTag: 5ed9df5e-5bca-42be-aa80-2009a2537c3c
+		summarizeBy: none
+		sourceColumn: EndDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Wiki QID'
+		dataType: string
+		isHidden
+		lineageTag: 5bec6e36-cfac-45ed-a807-e3354c2abcd1
+		summarizeBy: none
+		sourceColumn: Wiki QID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ULAN
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bd669bb6-6463-4832-8a3b-466cbfe309a9
+		summarizeBy: none
+		sourceColumn: ULAN
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Decade the artist was born, derived from BeginDate (e.g. 1926 -> 1920). Null when the birth year is unknown.
+	column 'Birth Decade'
+		dataType: int64
+		formatString: 0
+		lineageTag: c371b799-73fc-471e-92a9-63fa12d93cfd
+		summarizeBy: none
+		sourceColumn: Birth Decade
+
+	/// "Living" when no death year is on file, "Deceased" when one is, "Unknown" when the birth year itself is missing.
+	column 'Living Status'
+		dataType: string
+		lineageTag: 43e49401-7640-49ee-b0b8-aa30b2450117
+		summarizeBy: none
+		sourceColumn: Living Status
+
+	partition Artists = m
+		mode: import
+		source =
+				let
+				    // Load the raw MoMA artists export
+				    Source = Csv.Document(File.Contents("C:\Users\msala\Data\app_store\data_analysis\MoMA+Art+Collection\Artists.csv"),[Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Column Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    // Apply data types; birth/death years are read as whole numbers
+				    #"Changed Base Types" = Table.TransformColumnTypes(#"Promoted Column Headers",{{"ConstituentID", Int64.Type}, {"DisplayName", type text}, {"ArtistBio", type text}, {"Nationality", type text}, {"Gender", type text}, {"BeginDate", Int64.Type}, {"EndDate", Int64.Type}, {"Wiki QID", type text}, {"ULAN", Int64.Type}}),
+				    // The source uses 0 as a placeholder for an unknown birth or death year - replace it with null
+				    #"Replaced Zero Years" = Table.ReplaceValue(#"Changed Base Types", 0, null, Replacer.ReplaceValue, {"BeginDate", "EndDate"}),
+				    // Fill blank nationality and gender with a readable label and title-case the gender
+				    #"Cleaned Nationality And Gender" = Table.TransformColumns(#"Replaced Zero Years", {
+				        {"Nationality", each let v = Text.Trim(_ ?? "") in if v = "" then "Unknown" else v, type text},
+				        {"Gender", each let v = Text.Proper(Text.Trim(_ ?? "")) in if v = "" then "Unknown" else v, type text}
+				    }),
+				    // Derive the birth decade from the (cleaned) birth year
+				    #"Added Birth Decade" = Table.AddColumn(#"Cleaned Nationality And Gender", "Birth Decade", each
+				        if [BeginDate] = null then null else Number.IntegerDivide([BeginDate], 10) * 10, Int64.Type),
+				    // Classify each artist as Living, Deceased, or Unknown
+				    #"Added Living Status" = Table.AddColumn(#"Added Birth Decade", "Living Status", each
+				        if [BeginDate] = null then "Unknown" else if [EndDate] = null then "Living" else "Deceased", type text),
+				    #"Removed Errors" = Table.RemoveRowsWithErrors(#"Added Living Status", {"ConstituentID"})
+				in
+				    #"Removed Errors"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

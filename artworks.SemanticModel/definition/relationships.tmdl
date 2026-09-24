@@ -1,0 +1,5 @@
+relationship 504dddf0-8a82-462d-acb0-5de41cd0466c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Artworks.DateAcquired
+	toColumn: LocalDateTable_2afed5cb-5696-44a8-8473-3e585c82d94d.Date
+

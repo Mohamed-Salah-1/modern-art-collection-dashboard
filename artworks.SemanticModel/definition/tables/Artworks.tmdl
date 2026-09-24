@@ -1,0 +1,406 @@
+table Artworks
+	lineageTag: 90ae3eba-650d-4a59-a8da-5b7d83419159
+
+	/// Number of artworks (rows) in the current filter context.
+	measure '# Artworks' = COUNTROWS('Artworks')
+		formatString: #,##0
+		displayFolder: Counts
+		lineageTag: 77bbfe57-18ba-4b3e-ac3c-422c16f69af9
+
+	/// Number of artworks currently on display in the museum.
+	measure '# On View' = CALCULATE([# Artworks], 'Artworks'[On View] = "Yes")
+		formatString: #,##0
+		displayFolder: Counts
+		lineageTag: f5b970de-bd76-4766-b112-765546aaa23d
+
+	/// Share of artworks in context that are currently on display.
+	measure '% On View' = DIVIDE([# On View], [# Artworks])
+		formatString: 0.0%
+		displayFolder: Ratios
+		lineageTag: 24d8afb9-1572-4684-a3c4-1f88df893098
+
+	/// Number of artworks that have been catalogued in MoMA's collection system.
+	measure '# Cataloged' = CALCULATE([# Artworks], 'Artworks'[Cataloged Status] = "Yes")
+		formatString: #,##0
+		displayFolder: Counts
+		lineageTag: 97498312-fbde-43ff-962d-f3431bf931d2
+
+	/// Share of artworks in context that have been catalogued.
+	measure '% Cataloged' = DIVIDE([# Cataloged], [# Artworks])
+		formatString: 0.0%
+		displayFolder: Ratios
+		lineageTag: c3df885b-2c71-41dc-a58d-9de634ef07f4
+
+	column Title
+		dataType: string
+		lineageTag: 7af0fdcd-596f-4d98-afe0-822551b4a347
+		summarizeBy: none
+		sourceColumn: Title
+
+		annotation SummarizationSetBy = Automatic
+
+	column Artist
+		dataType: string
+		lineageTag: d970d65e-0a7d-409a-a498-bbff22b80943
+		summarizeBy: none
+		sourceColumn: Artist
+
+		annotation SummarizationSetBy = Automatic
+
+	column ConstituentID
+		dataType: string
+		isHidden
+		lineageTag: 848b908f-0e09-4e04-a83d-89764bac65ca
+		summarizeBy: none
+		sourceColumn: ConstituentID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ArtistBio
+		dataType: string
+		isHidden
+		lineageTag: 6b8bf859-d1f7-4cf0-bdd7-2358d665a861
+		summarizeBy: none
+		sourceColumn: ArtistBio
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nationality
+		dataType: string
+		isHidden
+		lineageTag: d6789be2-0aca-4f55-9cd7-47aa85e60cc3
+		summarizeBy: none
+		sourceColumn: Nationality
+
+		annotation SummarizationSetBy = Automatic
+
+	column BeginDate
+		dataType: string
+		isHidden
+		lineageTag: cea25eff-3002-41d8-907f-deed3657d3bb
+		summarizeBy: none
+		sourceColumn: BeginDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column EndDate
+		dataType: string
+		isHidden
+		lineageTag: f7824c51-9ece-46a6-b991-517b51828808
+		summarizeBy: none
+		sourceColumn: EndDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		isHidden
+		lineageTag: a382ec3c-af83-4c13-bb4f-76a838c7d15c
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: string
+		lineageTag: 39990e1b-8e4e-4b3b-9227-f4e61dcaf51a
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Medium
+		dataType: string
+		lineageTag: 79399f67-d4a7-4659-8c82-4359b844c78b
+		summarizeBy: none
+		sourceColumn: Medium
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dimensions
+		dataType: string
+		lineageTag: 9489a2b5-dc9a-462d-9517-371ad3134e49
+		summarizeBy: none
+		sourceColumn: Dimensions
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreditLine
+		dataType: string
+		lineageTag: 289ac47b-9c0b-42a6-8c0c-2a05ccdb1158
+		summarizeBy: none
+		sourceColumn: CreditLine
+
+		annotation SummarizationSetBy = Automatic
+
+	column AccessionNumber
+		dataType: string
+		isHidden
+		lineageTag: 0dfa4836-5f29-4431-87a4-5a98dadb0330
+		summarizeBy: none
+		sourceColumn: AccessionNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column Classification
+		dataType: string
+		lineageTag: a0682c21-b7d7-4ebe-8adb-028cb56454ec
+		summarizeBy: none
+		sourceColumn: Classification
+
+		annotation SummarizationSetBy = Automatic
+
+	column Department
+		dataType: string
+		lineageTag: 429c29cf-786f-4a6c-9e39-bc38f237f864
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateAcquired
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 89642f22-8786-466f-adf3-82c10d918f1f
+		summarizeBy: none
+		sourceColumn: DateAcquired
+
+		variation Variation
+			isDefault
+			relationship: 504dddf0-8a82-462d-acb0-5de41cd0466c
+			defaultHierarchy: LocalDateTable_2afed5cb-5696-44a8-8473-3e585c82d94d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Cataloged
+		dataType: string
+		isHidden
+		lineageTag: 4fff74ec-9d9b-4689-86c6-ddb6bebe6fd0
+		summarizeBy: none
+		sourceColumn: Cataloged
+
+		annotation SummarizationSetBy = Automatic
+
+	column ObjectID
+		dataType: int64
+		formatString: 0
+		lineageTag: 7ce1767f-1341-47e1-b1e2-eff8909e7ad5
+		summarizeBy: count
+		sourceColumn: ObjectID
+
+		annotation SummarizationSetBy = Automatic
+
+	column URL
+		dataType: string
+		isHidden
+		lineageTag: 32dcb2c9-2bc0-4051-8375-bf2b91fb77f9
+		summarizeBy: none
+		sourceColumn: URL
+
+		annotation SummarizationSetBy = Automatic
+
+	column ImageURL
+		dataType: string
+		isHidden
+		lineageTag: fab6f00b-b25f-44a4-8418-cc38ea8c4ab5
+		summarizeBy: none
+		sourceColumn: ImageURL
+
+		annotation SummarizationSetBy = Automatic
+
+	column OnView
+		dataType: string
+		isHidden
+		lineageTag: 4668d862-1d16-43a5-81a3-59c587db2961
+		summarizeBy: none
+		sourceColumn: OnView
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Circumference (cm)'
+		dataType: double
+		lineageTag: 5d987d57-a84a-4741-a58a-a7fb408c6cf3
+		summarizeBy: sum
+		sourceColumn: Circumference (cm)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Depth (cm)'
+		dataType: double
+		lineageTag: 195a5b36-9e95-4ab2-baf5-31c3b1ef29fc
+		summarizeBy: sum
+		sourceColumn: Depth (cm)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Diameter (cm)'
+		dataType: double
+		lineageTag: dea07c63-52b2-4ba1-a6ce-4693d8a5b483
+		summarizeBy: sum
+		sourceColumn: Diameter (cm)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Height (cm)'
+		dataType: double
+		lineageTag: c407edac-8082-4c71-a481-c14b6c4a1f39
+		summarizeBy: sum
+		sourceColumn: Height (cm)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Length (cm)'
+		dataType: double
+		lineageTag: 5b50a236-3510-4e74-9d1c-aef9a1fb47ae
+		summarizeBy: sum
+		sourceColumn: Length (cm)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weight (kg)'
+		dataType: double
+		lineageTag: e38566b0-9938-43d5-ace0-f652dd61ea11
+		summarizeBy: sum
+		sourceColumn: Weight (kg)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Width (cm)'
+		dataType: double
+		lineageTag: eaf3ec7e-9399-4958-88e7-0401956faca1
+		summarizeBy: sum
+		sourceColumn: Width (cm)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Seat Height (cm)'
+		dataType: double
+		lineageTag: 628b7b1b-92ff-4f33-899e-acbcdc13411e
+		summarizeBy: sum
+		sourceColumn: Seat Height (cm)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Duration (sec.)'
+		dataType: double
+		lineageTag: 7ab06a1a-d3f1-4dcd-be0b-164ea2c826b6
+		summarizeBy: sum
+		sourceColumn: Duration (sec.)
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Primary artist nationality, extracted from the raw parenthesised value and title-cased. Blank/unknown values are labelled "Unknown".
+	column 'Primary Nationality'
+		dataType: string
+		lineageTag: 63e173b1-977c-4f27-b0e8-66454d08736f
+		summarizeBy: none
+		sourceColumn: Primary Nationality
+
+	/// Artist gender normalised to Male / Female / Non-binary / Other / Unknown from the raw parenthesised value.
+	column 'Artist Gender'
+		dataType: string
+		lineageTag: 8d488fce-3fe4-4439-a3a8-95fcbc9e9e17
+		summarizeBy: none
+		sourceColumn: Artist Gender
+
+	/// Four-digit creation year parsed from the free-text Date field. Null when no year could be identified (e.g. "n.d.", "late 19th century").
+	column 'Year Created'
+		dataType: int64
+		formatString: 0
+		lineageTag: a137a74d-81ee-43a9-abdf-c2c90a59f32d
+		summarizeBy: none
+		sourceColumn: Year Created
+
+	/// Decade of creation derived from Year Created (e.g. 1967 -> 1960).
+	column 'Decade Created'
+		dataType: int64
+		formatString: 0
+		lineageTag: 07f01373-bb96-4d86-9451-9fba7c514283
+		summarizeBy: none
+		sourceColumn: Decade Created
+
+	/// Calendar year the artwork was acquired by MoMA, derived from DateAcquired.
+	column 'Year Acquired'
+		dataType: int64
+		formatString: 0
+		lineageTag: a462cc0c-e781-402d-9ba6-8c05206c1659
+		summarizeBy: none
+		sourceColumn: Year Acquired
+
+	/// "Yes" when the artwork is currently on display in the museum, otherwise "No".
+	column 'On View'
+		dataType: string
+		lineageTag: ced93820-1622-40e5-8b5d-195fe5ceaad7
+		summarizeBy: none
+		sourceColumn: On View
+
+	/// Catalogued status as readable Yes / No / Unknown (from the raw Y/N flag).
+	column 'Cataloged Status'
+		dataType: string
+		lineageTag: 80aca084-d2f7-4f6f-90ff-4cd49e31e847
+		summarizeBy: none
+		sourceColumn: Cataloged Status
+
+	partition Artworks = m
+		mode: import
+		source =
+				let
+				    // Load the raw MoMA artworks export; every field starts as text
+				    Source = Csv.Document(File.Contents("C:\Users\msala\Data\app_store\data_analysis\MoMA+Art+Collection\Artworks.csv"),[Delimiter=",", Columns=30, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    #"Promoted Column Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    // Apply base data types: text fields, the acquisition date, the object key and the reliably numeric size columns
+				    #"Changed Base Types" = Table.TransformColumnTypes(#"Promoted Column Headers",{{"Title", type text}, {"Artist", type text}, {"ConstituentID", type text}, {"ArtistBio", type text}, {"Nationality", type text}, {"BeginDate", type text}, {"EndDate", type text}, {"Gender", type text}, {"Date", type text}, {"Medium", type text}, {"Dimensions", type text}, {"CreditLine", type text}, {"AccessionNumber", type text}, {"Classification", type text}, {"Department", type text}, {"DateAcquired", type date}, {"Cataloged", type text}, {"ObjectID", Int64.Type}, {"URL", type text}, {"ImageURL", type text}, {"OnView", type text}, {"Circumference (cm)", type number}, {"Depth (cm)", type number}, {"Diameter (cm)", type number}, {"Height (cm)", type number}, {"Length (cm)", type number}, {"Weight (kg)", type number}, {"Width (cm)", type number}, {"Seat Height (cm)", type number}, {"Duration (sec.)", type number}}),
+				    // Trim whitespace and fill blank category labels so charts have no empty axis members
+				    #"Cleaned Category Text" = Table.TransformColumns(#"Changed Base Types", {
+				        {"Classification", each let v = Text.Trim(_ ?? "") in if v = "" then "Unclassified" else v, type text},
+				        {"Department", each let v = Text.Trim(_ ?? "") in if v = "" then "Unassigned" else v, type text},
+				        {"Title", each Text.Trim(_ ?? ""), type text},
+				        {"Artist", each Text.Trim(_ ?? ""), type text}
+				    }),
+				    // Pull the primary nationality out of the parenthesised (sometimes repeated) raw value
+				    #"Added Primary Nationality" = Table.AddColumn(#"Cleaned Category Text", "Primary Nationality", each
+				        let raw = Text.Trim(Text.BetweenDelimiters([Nationality] ?? "", "(", ")"))
+				        in if raw = "" or Text.Lower(raw) = "nationality unknown" then "Unknown" else Text.Proper(raw), type text),
+				    // Normalise the parenthesised gender value into a small, readable set
+				    #"Added Artist Gender" = Table.AddColumn(#"Added Primary Nationality", "Artist Gender", each
+				        let g = Text.Lower(Text.Trim(Text.BetweenDelimiters([Gender] ?? "", "(", ")")))
+				        in if Text.StartsWith(g, "female") then "Female"
+				           else if Text.StartsWith(g, "male") then "Male"
+				           else if g = "" then "Unknown"
+				           else "Non-binary / Other", type text),
+				    // Read the first plausible four-digit year (1000-2026) out of the free-text creation Date
+				    #"Added Year Created" = Table.AddColumn(#"Added Artist Gender", "Year Created", each
+				        let
+				            s = [Date] ?? "",
+				            n = Text.Length(s),
+				            windows = if n < 4 then {} else List.Transform({0..n - 4}, (i) => Text.Range(s, i, 4)),
+				            candidates = List.Transform(windows, (w) => if Text.Select(w, {"0".."9"}) = w then Number.FromText(w) else null),
+				            years = List.Select(candidates, (y) => y <> null and y >= 1000 and y <= 2026)
+				        in if List.Count(years) = 0 then null else List.First(years), Int64.Type),
+				    // Derive the decade of creation (e.g. 1967 -> 1960)
+				    #"Added Decade Created" = Table.AddColumn(#"Added Year Created", "Decade Created", each
+				        if [Year Created] = null then null else Number.IntegerDivide([Year Created], 10) * 10, Int64.Type),
+				    // Derive the acquisition year from the acquisition date
+				    #"Added Year Acquired" = Table.AddColumn(#"Added Decade Created", "Year Acquired", each
+				        if [DateAcquired] = null then null else Date.Year([DateAcquired]), Int64.Type),
+				    // Flag whether the artwork is currently on display (OnView holds a gallery location when it is)
+				    #"Added On View" = Table.AddColumn(#"Added Year Acquired", "On View", each
+				        if Text.Trim([OnView] ?? "") = "" then "No" else "Yes", type text),
+				    // Turn the raw catalogued Y/N flag into readable labels
+				    #"Added Cataloged Status" = Table.AddColumn(#"Added On View", "Cataloged Status", each
+				        if [Cataloged] = "Y" then "Yes" else if [Cataloged] = "N" then "No" else "Unknown", type text)
+				in
+				    #"Added Cataloged Status"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
